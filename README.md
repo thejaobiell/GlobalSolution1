@@ -1,4 +1,4 @@
-# GlobalSolution
+# GlobalSolution - SafeAlert
 ---
 
 ## 👨‍💻 Integrantes do Grupo
