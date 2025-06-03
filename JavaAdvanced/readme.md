@@ -118,10 +118,12 @@ http://localhost:8080/api/<endpoint>
 ---
 
 ## 🎥 Vídeos
-SERÁ REFEITO
-📽️ [Assista à demonstração da solução:](https://youtu.be/fBCf_oPNepI)
 
-📽️ [Pitch:](https://www.youtube.com/watch?v=YEXlSVQTqaA)
+SERÁ REFEITO
+
+📽️ [Demonstração da Solução:](https://youtu.be/fBCf_oPNepI)
+
+📽️ [Pitch](https://www.youtube.com/watch?v=YEXlSVQTqaA)
 ---
 
 ## 👨‍💻 Membros do Grupo
