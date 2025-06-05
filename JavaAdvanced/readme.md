@@ -76,8 +76,16 @@ management.endpoints.web.exposure.include=health
 
 ### 4. Execute o projeto
 
+Em linux:
 ```bash
 ./mvnw spring-boot:run
+```
+
+ou
+
+Em Windows:
+```bash
+mvnw.cmd spring-boot:run
 ```
 
 ### 5. Teste localmente
