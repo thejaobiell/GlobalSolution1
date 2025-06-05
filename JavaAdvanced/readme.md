@@ -68,6 +68,9 @@ spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
 spring.jpa.hibernate.ddl-auto=update
 
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
 management.endpoints.web.exposure.include=health
 ```
 
@@ -81,6 +84,8 @@ management.endpoints.web.exposure.include=health
 
 ```bash
 http://localhost:8080/api/<endpoint>
+ou
+http://<IP LOCAL DA MÁQUINA>:8080/api/<endpoint>
 ```
 
 > Caso esteja online, utilize a URL de Deploy:
