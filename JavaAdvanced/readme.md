@@ -90,7 +90,11 @@ mvnw.cmd spring-boot:run
 
 ```bash
 http://localhost:8080/api/<endpoint>
+```
+
 ou
+
+```bash
 http://<IP LOCAL DA MÁQUINA>:8080/api/<endpoint>
 ```
 
