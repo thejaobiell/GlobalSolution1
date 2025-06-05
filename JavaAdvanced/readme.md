@@ -119,7 +119,7 @@ http://<IP LOCAL DA MÁQUINA>:8080/api/<endpoint>
 
 ### 7. Configure o `application.properties` conforme instruções anteriores
 
-### 8. Execute o projeto com: `Run As > Spring Boot App`
+### 8. Execute o projeto com: `Run As > Java Application`
 
 ---
 
