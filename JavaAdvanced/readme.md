@@ -81,8 +81,6 @@ Em linux:
 ./mvnw spring-boot:run
 ```
 
-ou
-
 Em Windows:
 ```bash
 mvnw.cmd spring-boot:run
