@@ -134,11 +134,11 @@ http://<IP LOCAL DA MÁQUINA>:8080/api/<endpoint>
 
 ## 🎥 Vídeos
 
-SERÁ REFEITO
+📽️ [Vídeo Pitch](https://www.youtube.com/watch?v=YEXlSVQTqaA)
 
-📽️ [Demonstração da Solução:](https://youtu.be/fBCf_oPNepI)
 
-📽️ [Pitch](https://www.youtube.com/watch?v=YEXlSVQTqaA)
+📽️ [Vídeo Demonstrando a API](https://youtu.be/SbV9s94TQM8)
+
 ---
 
 ## 👨‍💻 Membros do Grupo
