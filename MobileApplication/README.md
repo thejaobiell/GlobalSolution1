@@ -73,7 +73,7 @@ global-solution-1-semestre-safealert/
 * Expo CLI instalado:
 * Java 17
 * Maven
-* Oracle Database (Usar ou dá FIAP ou do ORACLE XE)
+* Oracle Database (Usar FIAP ou do ORACLE XE)
 * App **Expo Go** instalado no celular (Android/iOS)
 
 ---
@@ -129,6 +129,8 @@ code .
 src/main/resources/application.properties
 ```
 
+Usando Oracle Database FIAP:
+
 ```properties
 spring.application.name=safealert
 
@@ -145,6 +147,25 @@ spring.jpa.properties.hibernate.format_sql=true
 
 management.endpoints.web.exposure.include=health
 ```
+
+Usando Oracle Database XE [recomendo instalação via DOCKER](https://chatgpt.com/share/68434468-80b0-8008-817e-c2fcdf2da861):
+```properties
+spring.application.name=safealert
+
+spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/XEPDB1
+spring.datasource.username=<SEU_USERNAME>
+spring.datasource.password=<SUA_SENHA>
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+management.endpoints.web.exposure.include=health 
+```
+
 
 4. **Execute o projeto:**
 
