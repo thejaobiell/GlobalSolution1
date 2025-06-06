@@ -25,18 +25,23 @@ Este projeto implementa uma aplicação Java Spring Boot com um CRUD completo, p
 
 ---
 
+Claro! Aqui está o seu tutorial modificado para usar um **nome personalizado para o projeto Docker Compose** (neste caso, `safealert`):
+
+---
+
 ## 🚀 Como Executar
 
 ### 1. Clone o repositório
+
 ```bash
 git clone https://github.com/thejaobiell/GS-Devops.git
 cd GS-Devops/safealert
-````
+```
 
-### 2. Suba os containers em segundo plano
+### 2. Suba os containers em segundo plano com um nome de projeto
 
 ```bash
-docker-compose up -d --build
+docker-compose -p safealert up -d --build
 ```
 
 ### 3. Verifique se os containers estão rodando
@@ -50,6 +55,26 @@ docker ps
 ```bash
 docker logs -f safealert_app
 docker logs -f postgres_db
+```
+
+---
+
+### 5. Desligue os containers
+
+```bash
+docker-compose -p safealert down
+```
+
+### 6. Ligue novamente os containers
+
+```bash
+docker-compose -p safealert up -d
+```
+
+### 7. Reinicie os containers (opcional)
+
+```bash
+docker-compose -p safealert restart
 ```
 
 ---
