@@ -65,6 +65,12 @@ global-solution-1-semestre-safealert/
 
 ---
 
+## 🎥 Vídeo
+
+📽️ [Demonstração do Aplicativo](https://youtu.be/E7OMUrOjvd4)
+
+---
+
 ## 🚀 Como Rodar o Projeto
 
 ### 🔧 Pré-requisitos
@@ -265,12 +271,6 @@ npx expo start --tunnel
 
 * Escaneie o QR Code com o **Expo Go**
 * Ou utilize um **emulador Android/iOS** já configurado
-
----
-
-## 🎥 Vídeo
-
-📽️ [Demonstração do Aplicativo](https://youtu.be/E7OMUrOjvd4)
 
 ---
 
