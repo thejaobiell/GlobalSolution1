@@ -73,12 +73,7 @@ global-solution-1-semestre-safealert/
 * Expo CLI instalado:
 * Java 17
 * Maven
-* Oracle Database
-
-```bash
-npm install -g expo-cli
-```
-
+* Oracle Database (Usar ou dá FIAP ou do ORACLE XE)
 * App **Expo Go** instalado no celular (Android/iOS)
 
 ---
