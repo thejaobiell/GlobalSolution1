@@ -249,7 +249,7 @@ npx expo start --tunnel
 
 ## 🎥 Vídeo
 
-📽️ [Demonstração da Aplicativo](https://youtu.be/E7OMUrOjvd4)
+📽️ [Demonstração do Aplicativo](https://youtu.be/E7OMUrOjvd4)
 
 ---
 
