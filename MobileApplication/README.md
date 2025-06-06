@@ -17,7 +17,7 @@
 * **React Native** com **Expo**
 * **React Navigation** (navegação de telas)
 * **Axios** (comunicação com a API)
-* **AsyncStorage** (armazenamento local das informações doi usuário)
+* **AsyncStorage** (armazenamento local das informações do usuário)
 
 ---
 
