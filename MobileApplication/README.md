@@ -148,7 +148,7 @@ spring.jpa.properties.hibernate.format_sql=true
 management.endpoints.web.exposure.include=health
 ```
 
-Usando Oracle Database XE [recomendo instalação via DOCKER](https://chatgpt.com/share/68434468-80b0-8008-817e-c2fcdf2da861):
+Usando Oracle Database XE [(recomendo instalação via DOCKER)](https://chatgpt.com/share/68434468-80b0-8008-817e-c2fcdf2da861):
 ```properties
 spring.application.name=safealert
 
