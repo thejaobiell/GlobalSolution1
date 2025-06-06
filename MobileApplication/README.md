@@ -123,7 +123,7 @@ code .
 
 3. **Configure o `application.properties` com os dados do Oracle da FIAP:**
 
-🗂️ **Caminho completo do arquivo:**
+### 🗂️ **Caminho completo do arquivo:**
 
 ```
 src/main/resources/application.properties
@@ -146,9 +146,10 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 management.endpoints.web.exposure.include=health
-```
+````
 
 Usando Oracle Database XE [(recomendo instalação via DOCKER)](https://chatgpt.com/share/68434468-80b0-8008-817e-c2fcdf2da861):
+
 ```properties
 spring.application.name=safealert
 
@@ -166,6 +167,10 @@ spring.jpa.properties.hibernate.format_sql=true
 management.endpoints.web.exposure.include=health 
 ```
 
+### ⚠️ Observação Importante
+
+> **Caso você enfrente erros como `ORA-12519`, `ORA-12516` ou mensagens relacionadas a *session limits* ao usar o Oracle da FIAP, recomendamos utilizar o Oracle XE como segunda opção.**
+> O Oracle XE pode ser facilmente instalado localmente via Docker e oferece mais estabilidade para testes e desenvolvimento sem limitações de sessões simultâneas.
 
 4. **Execute o projeto:**
 
