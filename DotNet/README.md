@@ -16,7 +16,7 @@
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/leomotalima/SafeAlertDotNet.git
+git clone  https://github.com/leomotalima/SafeAlertRepo.git
 cd SafeAlertRepo/SafeAlertDotNet
 ```
 
