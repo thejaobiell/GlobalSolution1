@@ -159,7 +159,7 @@ Usando Oracle Database XE [(recomendo instalação via DOCKER)](https://chatgpt.
 ```properties
 spring.application.name=safealert
 
-spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/XEPDB1
+spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/freepdb1
 spring.datasource.username=<SEU_USERNAME>
 spring.datasource.password=<SUA_SENHA>
 spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
