@@ -1,11 +1,13 @@
-# 🚨 SAFE-ALERT – API REST para Monitoramento de Eventos Extremos
+# 🚨 SafeAlert
+**SafeAlert** é uma plataforma de comunicação desenvolvida para **reportar e monitorar em tempo real eventos extremos** — como desastres naturais, acidentes e situações de emergência — **ocorridos na cidade de São Paulo**. A solução tem como objetivo **auxiliar tanto os cidadãos quanto as autoridades locais** com informações ágeis, precisas e confiáveis, promovendo uma resposta mais rápida e eficaz frente a situações críticas.
 
-A **SAFE-ALERT** é uma plataforma para **monitoramento, alerta e comunicação em tempo real** sobre **eventos extremos** como enchentes, incêndios e deslizamentos. Esta API REST atua como backend e se integra a uma **aplicação Java Web**, permitindo:
+## 📌 Funcionalidades Principais
 
-- Gerenciamento de usuários
-- Registro e consulta de ocorrências
-- Publicação de alertas
-- Monitoramento de localidades
+- Usuários: cadastro e autenticação
+- Localidades: gerenciamento de localidades
+- Eventos: criação e gestão de eventos emergenciais
+- Postagens: publicação de postagens informativas
+- Ocorrências: registro e listagem de ocorrências
 
 ---
 
@@ -45,23 +47,17 @@ dotnet ef database update
 dotnet run
 ```
 
-# 6. Acesse a documentação Swagger
+6. Acesse a documentação Swagger:
+
 ```txt
 http://localhost:5241/swagger
 ```
 
 ---
 
-
-## 📂 Endpoints Disponíveis
-
-Os principais endpoints estão organizados por entidade:
----
-
 ## 📂 Endpoints
 
 ### 👤 Usuários
-
 - `GET /usuarios`
 - `GET /usuarios/{id}`
 - `POST /usuarios`
@@ -69,7 +65,6 @@ Os principais endpoints estão organizados por entidade:
 - `DELETE /usuarios/{id}`
 
 ### 🌍 Localidades
-
 - `GET /localidades`
 - `GET /localidades/{id}`
 - `POST /localidades`
@@ -77,7 +72,6 @@ Os principais endpoints estão organizados por entidade:
 - `DELETE /localidades/{id}`
 
 ### 🌪️ Eventos
-
 - `GET /eventos`
 - `GET /eventos/{id}`
 - `POST /eventos`
@@ -85,7 +79,6 @@ Os principais endpoints estão organizados por entidade:
 - `DELETE /eventos/{id}`
 
 ### 📢 Postagens
-
 - `GET /postagens`
 - `GET /postagens/{id}`
 - `POST /postagens`
@@ -93,7 +86,6 @@ Os principais endpoints estão organizados por entidade:
 - `DELETE /postagens/{id}`
 
 ### 🆘 Ocorrências
-
 - `GET /ocorrencias`
 - `GET /ocorrencias/{id}`
 - `POST /ocorrencias`
@@ -119,18 +111,29 @@ Os principais endpoints estão organizados por entidade:
 | Java Advanced     | Interface web integrada à API REST                                        |
 | Banco de Dados    | Persistência com Oracle                                                   |
 
+---
+
 ## 📌 Observações
 
-* Existe um arquivo **POST.txt** com templates para testar a api;
-* O projeto utiliza o padrão **DTO** para encapsulamento e segurança dos dados;
-* Os dados trafegam via JSON;
-* Ideal para uso interno de sistemas de monitoramento e controle de frotas de motos;
+- Existe um arquivo **POST.txt** com templates para testar a API.
+- O projeto utiliza o padrão **DTO** para encapsulamento e segurança dos dados.
+- Os dados trafegam via JSON.
+- O sistema é voltado ao apoio de órgãos públicos em emergências urbanas, com arquitetura escalável e integração em tempo real.
 
 ---
 
+## 🎥 Demonstrações em Vídeo
+
+- ✅ **Demonstração da Solução Completa:**  
+  https://youtu.be/SbV9s94TQM8
+
+- 🎤 **Pitch do Projeto:**  
+  https://www.youtube.com/watch?v=YEXlSVQTqaA
+
+---
 
 ## 👥 Equipe de Desenvolvimento
 
-- **João Gabriel Boaventura Marques e Silva** - RM554874 - 2TDSB2025
-- **Léo Mota Lima** - RM557851 - 2TDSB2025
+- **João Gabriel Boaventura Marques e Silva** - RM554874 - 2TDSB2025  
+- **Léo Mota Lima** - RM557851 - 2TDSB2025  
 - **Lucas Leal das Chagas** - RM551124 - 2TDSB2025
