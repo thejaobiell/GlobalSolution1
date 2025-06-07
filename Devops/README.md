@@ -31,7 +31,7 @@ Claro! Aqui está o seu tutorial modificado para usar um **nome personalizado pa
 
 ## 🚀 Como Executar
 
-### 1. Clone o repositório
+### 1. [Clone o repositório](https://github.com/thejaobiell/GS-Devops)
 
 ```bash
 git clone https://github.com/thejaobiell/GS-Devops.git
