@@ -1,6 +1,6 @@
 # 🚨 SafeAlert – Mobile (React Native + Expo) + API (Java)
 
-**SafeAlert** é um aplicativo mobile desenvolvido com **React Native (Expo)** para **reportar e monitorar eventos extremos em tempo real** — como desastres naturais, acidentes e emergências — **na cidade de São Paulo**. O objetivo é auxiliar **cidadãos e autoridades locais** com informações ágeis e confiáveis, promovendo uma resposta mais rápida em situações críticas.
+**SafeAlert** é um aplicativo mobile desenvolvido com **React Native (Expo)** para **reportar e monitorar eventos extremos em tempo real** — como desastres naturais, acidentes e emergências — **na cidade de São Paulo**. O objetivo é auxiliar **cidadãos e autoridades locais** com informações ágeis e confiáveis, promovendo uma resposta mais rápida em situações de evento extremo.
 
 ---
 
@@ -114,7 +114,7 @@ cd SafeAlert-GlobalSolution
 
 ### ▶️ Rodar a API Backend Localmente
 
-1. **Clone o repositório do backend:**
+1. **[Clone o repositório do backend:](https://github.com/thejaobiell/GS-JavaAdvanced)**
 
 ```bash
 git clone https://github.com/thejaobiell/GS-JavaAdvanced.git
@@ -218,7 +218,7 @@ http://<IP LOCAL DA MÁQUINA>:8080/api/<endpoint>
 cd ../..
 ```
 
-2. **Clone o repositório do app mobile:**
+2. **[Clone o repositório do app mobile:](https://github.com/FIAP-MOBILE/global-solution-1-semestre-safealert)**
 
 ```bash
 git clone https://github.com/FIAP-MOBILE/global-solution-1-semestre-safealert.git
@@ -245,7 +245,7 @@ Abra o arquivo:
 Types/ApiBase.ts
 ```
 
-E altere a baseURL conforme o IP local da máquina onde o backend está rodando:
+E altere a baseURL conforme o IP local da sua máquina onde o backend está rodando:
 
 ```ts
 baseURL: 'http://<SEU_IP_LOCAL>:8080/api',
@@ -266,6 +266,7 @@ ou
 ```bash
 npx expo start --tunnel
 ```
+> Para testes em celulares físicos, recomendamos usar este comando
 
 7. **Abra o app no celular:**
 
