@@ -1,0 +1,151 @@
+[
+    {
+        "id": "a1b2c3d4e5f6g7h8",
+        "type": "tab",
+        "label": "Monitor de Nível de Rio (Wokwi + Node-RED)",
+        "disabled": false,
+        "info": "Este fluxo recebe dados de distância de um ESP32 no Wokwi via MQTT, calcula o nível do rio, determina o status de alerta e envia comandos de volta para o dispositivo para controlar LEDs e um buzzer."
+    },
+    {
+        "id": "mqtt-broker-config",
+        "type": "mqtt-broker",
+        "name": "HiveMQ Public Broker",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "NodeRED_Client_MonitorRio",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true
+    },
+    {
+        "id": "h8g7f6e5d4c3b2a1",
+        "type": "mqtt in",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "Distância do Sensor (Wokwi)",
+        "topic": "iot/sensor/distancia",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "mqtt-broker-config",
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "f1e2d3c4b5a69876"
+            ]
+        ]
+    },
+    {
+        "id": "i9j8k7l6m5n4o3p2",
+        "type": "mqtt in",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "Alerta Externo (API)",
+        "topic": "iot/api/alerta",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "mqtt-broker-config",
+        "x": 170,
+        "y": 220,
+        "wires": [
+            [
+                "f1e2d3c4b5a69876"
+            ]
+        ]
+    },
+    {
+        "id": "f1e2d3c4b5a69876",
+        "type": "function",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "Calcula Nível e Define Alertas",
+        "func": "\n// --- Constantes de Configuração (ajuste conforme necessário) ---\nconst ALTURA_SENSOR = 300.0; // Altura do sensor em relação ao leito do rio (cm)\nconst NIVEL_NORMAL = 150.0;    // Nível máximo para status 'Normal' (cm)\nconst NIVEL_ALERTA = 220.0;    // Nível máximo para status 'Alerta' (cm)\n\n// --- Leitura e Armazenamento de Dados ---\nlet distancia = context.get('distancia') || 300;\nlet alertaApi = context.get('alertaApi') || 0;\n\n// Atualiza o contexto com base no tópico da mensagem recebida\nif (msg.topic === 'iot/sensor/distancia') {\n    distancia = parseFloat(msg.payload);\n    context.set('distancia', distancia);\n} else if (msg.topic === 'iot/api/alerta') {\n    alertaApi = parseInt(msg.payload, 10);\n    context.set('alertaApi', alertaApi);\n}\n\n// --- Lógica de Cálculo e Decisão ---\nlet nivelAgua = ALTURA_SENSOR - distancia;\nif (nivelAgua < 0) {\n    nivelAgua = 0; // Garante que o nível não seja negativo\n}\n\n// Objeto para armazenar o estado dos atuadores\nlet estado = {\n    normal: 0, // 0 = desligado, 1 = ligado\n    alerta: 0,\n    perigo: 0,\n    buzzer: 0\n};\n\n// Condições para definir o estado de alerta\n// Condição de PERIGO: Nível da água acima do limite de alerta OU alerta da API em nível 2\nif ((nivelAgua > NIVEL_ALERTA && nivelAgua <= ALTURA_SENSOR) || alertaApi === 2) {\n    estado.perigo = 1;\n    estado.buzzer = 1;\n// Condição de ALERTA: Nível da água acima do limite normal OU alerta da API em nível 1\n} else if ((nivelAgua > NIVEL_NORMAL && nivelAgua <= NIVEL_ALERTA) || alertaApi === 1) {\n    estado.alerta = 1;\n// Condição NORMAL: Nenhuma das condições acima\n} else {\n    estado.normal = 1;\n}\n\n// --- Preparação das Mensagens de Saída ---\n\n// Mensagem de status completo para depuração ou dashboard\nlet dadosOut = {\n    payload: {\n        distancia: distancia,\n        nivelAgua: nivelAgua.toFixed(2),\n        alertaApi: alertaApi,\n        status: estado\n    }\n};\n\n// Retorna múltiplas mensagens, cada uma para um tópico MQTT específico\nreturn [\n    { topic: 'iot/led/verde', payload: estado.normal },\n    { topic: 'iot/led/amarelo', payload: estado.alerta },\n    { topic: 'iot/led/vermelho', payload: estado.perigo },\n    { topic: 'iot/buzzer/estado', payload: estado.buzzer },\n    { topic: 'iot/status/dados', payload: JSON.stringify(dadosOut.payload) }\n];\n",
+        "outputs": 5,
+        "noerr": 0,
+        "initialize": "// Inicializa as variáveis de contexto na primeira execução\ncontext.set('distancia', 300);\ncontext.set('alertaApi', 0);",
+        "finalize": "",
+        "x": 480,
+        "y": 180,
+        "wires": [
+            [
+                "led_verde_out"
+            ],
+            [
+                "led_amarelo_out"
+            ],
+            [
+                "led_vermelho_out"
+            ],
+            [
+                "buzzer_out"
+            ],
+            [
+                "dados_out"
+            ]
+        ]
+    },
+    {
+        "id": "led_verde_out",
+        "type": "mqtt out",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "CMD > LED Verde",
+        "topic": "iot/led/verde",
+        "qos": "1",
+        "retain": "true",
+        "broker": "mqtt-broker-config",
+        "x": 770,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "led_amarelo_out",
+        "type": "mqtt out",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "CMD > LED Amarelo",
+        "topic": "iot/led/amarelo",
+        "qos": "1",
+        "retain": "true",
+        "broker": "mqtt-broker-config",
+        "x": 780,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "led_vermelho_out",
+        "type": "mqtt out",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "CMD > LED Vermelho",
+        "topic": "iot/led/vermelho",
+        "qos": "1",
+        "retain": "true",
+        "broker": "mqtt-broker-config",
+        "x": 780,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "buzzer_out",
+        "type": "mqtt out",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "CMD > Buzzer",
+        "topic": "iot/buzzer/estado",
+        "qos": "1",
+        "retain": "true",
+        "broker": "mqtt-broker-config",
+        "x": 760,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "dados_out",
+        "type": "mqtt out",
+        "z": "a1b2c3d4e5f6g7h8",
+        "name": "Status Completo",
+        "topic": "iot/status/dados",
+        "qos": "0",
+        "retain": "false",
+        "broker": "mqtt-broker-config",
+        "x": 770,
+        "y": 320,
+        "wires": []
+    }
+]
