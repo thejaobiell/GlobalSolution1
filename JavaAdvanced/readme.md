@@ -43,7 +43,7 @@ Acesse a aplicação em produção pelo link abaixo:
 
 ## ✅ Execução via Terminal
 
-### 1. Clone o repositório
+### 1. [Clone o repositório](https://github.com/thejaobiell/GS-JavaAdvanced)
 
 ```bash
 git clone https://github.com/thejaobiell/GS-JavaAdvanced.git
