@@ -54,8 +54,15 @@ git clone https://github.com/thejaobiell/GS-JavaAdvanced.git
 ```bash
 cd GS-JavaAdvanced/safealert
 ```
+3. **Configure o `application.properties` com os dados do Oracle da FIAP:**
 
-### 3. Configure o `application.properties` com os dados do Oracle da FIAP:
+###### 🗂️ **Caminho completo do arquivo:**
+
+```
+src/main/resources/application.properties
+```
+
+Usando Oracle Database FIAP:
 
 ```properties
 spring.application.name=safealert
@@ -72,7 +79,32 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 management.endpoints.web.exposure.include=health
+````
+
+Usando Oracle Database XE [(recomendo instalação via DOCKER)](https://chatgpt.com/share/68434468-80b0-8008-817e-c2fcdf2da861):
+
+```properties
+spring.application.name=safealert
+
+spring.datasource.url=jdbc:oracle:thin:@//localhost:1521/freepdb1
+spring.datasource.username=<SEU_USERNAME>
+spring.datasource.password=<SUA_SENHA>
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+management.endpoints.web.exposure.include=health 
 ```
+
+### ⚠️ Observação Importante
+
+> **Caso você enfrente erros como `ORA-12519`, `ORA-12516` ou mensagens relacionadas a *session limits* ao usar o Oracle da FIAP, recomendamos utilizar o Oracle XE como segunda opção.**
+> O Oracle XE pode ser facilmente instalado localmente via Docker e oferece mais estabilidade para testes e desenvolvimento sem limitações de sessões simultâneas.
+
 
 ### 4. Execute o projeto
 
