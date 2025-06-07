@@ -1,154 +1,120 @@
-# 🌊🔔 SafeAlert: Monitor de Nível de Rio e Sistema de Alerta de Enchentes (Simulação no Wokwi) 
+# Monitor de Nível de Rio com ESP32, Wokwi e Node-RED
 
-## 👋 Olá! Bem-vindo ao nosso projeto de simulação de um sistema de alerta de enchentes!
+## 📖 Descrição
+Este projeto simula um sistema de monitoramento do nível de um rio utilizando um ESP32, o simulador online Wokwi e o Node-RED. O sensor ultrassônico HC-SR04, conectado ao ESP32, mede a distância até a superfície da água. Esses dados são enviados via protocolo MQTT para um fluxo no Node-RED, que processa a informação, determina o estado de alerta (Normal, Alerta ou Perigo) e envia comandos de volta para o ESP32 para acionar LEDs de sinalização e um buzzer.
 
-### O que é este projeto?
+O sistema também é capaz de receber um comando de alerta externo (via API, por exemplo), que pode sobrepor o estado medido pelo sensor, aumentando a robustez do sistema de alerta.
 
-Imagine que podemos construir um "vigia" eletrônico para um rio. Ele usa um sensor para medir o nível da água. Se a água subir demais, ele acende luzes de alerta e até dispara um alarme! Vamos simular tudo isso usando o [Wokwi](https://wokwi.com).
+## ✨ Como Funciona
+O fluxo de trabalho do sistema é o seguinte:
 
-### Para que serve?
+### Simulação no Wokwi
+- Um ESP32 com um sensor ultrassônico HC-SR04 simula a medição da distância até a água.
+- O código no ESP32 se conecta a uma rede Wi-Fi e a um broker MQTT público.
+- A distância medida é publicada em um tópico MQTT (`iot/sensor/distancia`).
+- O ESP32 também se inscreve em tópicos MQTT para receber comandos para controlar três LEDs (verde, amarelo, vermelho) e um buzzer.
 
-Aprender a usar sensores, programar o Arduino para tomar decisões e criar alertas para situações de perigo, como uma enchente.
+### Processamento no Node-RED
+- O fluxo do Node-RED se inscreve no tópico de distância do sensor e em um tópico de alerta externo (`iot/api/alerta`).
+- Um nó de função principal calcula o nível real da água com base na altura do sensor.
+- Com base no nível da água e no alerta externo, a função determina o status: Normal, Alerta ou Perigo.
+- O Node-RED publica mensagens nos tópicos apropriados para ligar/desligar os LEDs e o buzzer no Wokwi.
+- Um status completo com todos os dados (distância, nível, status dos atuadores) é publicado para depuração ou visualização em um dashboard (`iot/status/dados`).
 
-## ✨ O que o nosso "Vigia Eletrônico" faz?
+## 🛠️ Componentes (Simulação Wokwi)
+A simulação no Wokwi utiliza os seguintes componentes virtuais:
 
-### Mede a Água:
+1x Placa de Desenvolvimento ESP32 DevKit v1
 
-* Usa o sensor **HC-SR04** que envia som ultrassônico e mede o tempo de retorno.
+1x Sensor Ultrassônico HC-SR04
+1x LED Verde
+1x LED Amarelo
+1x LED Vermelho
+1x Buzzer
+3x Resistor de 220Ω
 
-### Calcula o Nível:
+- 1x Placa de Desenvolvimento ESP32 DevKit v1
+- 1x Sensor Ultrassônico HC-SR04
+- 1x LED Verde
+- 1x LED Amarelo
+- 1x LED Vermelho
+- 1x Buzzer
+- 3x Resistor de 220Ω
 
-* Usa a distância medida e a altura do sensor para saber o nível da água:
+A montagem dos componentes está definida no arquivo `diagram.json`.
 
-  ```
-  Nivel da Água = Altura do Sensor - Distância Medida
-  ```
+## ⚙️ Software e Serviços
+- **Wokwi**: Simulador online para projetos de eletrônica e IoT.
+- **Node-RED**: Ferramenta de programação visual baseada em fluxos.
+- **Broker MQTT Público**: Utilizado para a comunicação entre o ESP32 e o Node-RED (neste caso, `broker.hivemq.com`).
 
-### Mostra Alertas com LEDs:
+## 🚀 Configuração e Uso
 
-* 🟢 **Verde**: Nível normal
-* 🟡 **Amarelo**: Alerta
-* 🔴 **Vermelho**: Perigo de Inundação
+### 1. Configurar o Wokwi
+1.  Acesse o Wokwi.
+2.  Carregue os arquivos do projeto:
+    *   `diagram.json`: Define a montagem dos componentes no painel.
+    *   `sketch.ino` (ou o seu arquivo de código principal do Arduino): Contém o código que será executado no ESP32.
+    *   `libraries.txt`: Para garantir que a biblioteca `PubSubClient` seja instalada.
+3.  **Código do ESP32**: O arquivo `sketch.ino` já contém o código C++ para o ESP32 que realiza as seguintes tarefas:
+    *   Conexão com a rede Wi-Fi.
+    *   Conexão com o broker MQTT.
+    *   Leitura periódica do sensor HC-SR04.
+    *   Publicação da distância no tópico `iot/sensor/distancia`.
+    *   Subscrição aos tópicos `iot/led/verde`, `iot/led/amarelo`, `iot/led/vermelho` e `iot/buzzer/estado` para controlar os atuadores.
+4.  Inicie a simulação no Wokwi.
 
-### Alarme Sonoro:
+### 2. Configurar o Node-RED
+1.  Abra sua instância do Node-RED.
+2.  Clique no menu no canto superior direito > **Import**.
+3.  Cole o conteúdo do arquivo `node.json` e importe o fluxo.
+4.  O fluxo já está configurado para se conectar ao broker público do HiveMQ. Se necessário, você pode alterar a configuração no nó `mqtt-broker-config`.
+5.  Clique em **Deploy** para ativar o fluxo.
 
-* Um **buzzer** 🔊 toca se o LED vermelho estiver ativo
+### 3. Executando a Simulação
+1.  Com a simulação rodando no Wokwi e o fluxo ativo no Node-RED, o sistema estará operacional.
+2.  No Wokwi, clique no sensor HC-SR04 para alterar a distância simulada.
+3.  Observe como os LEDs e o buzzer respondem de acordo com a lógica definida no Node-RED.
 
-### Simula Alerta Externo:
+## 📡 Tópicos MQTT
 
-* A variável `alertaApiSimulado` simula avisos meteorológicos:
+| Tópico                | Publicado por   | Consumido por   | Descrição                                                              |
+|-----------------------|-----------------|-----------------|------------------------------------------------------------------------|
+| `iot/sensor/distancia`| ESP32 (Wokwi)   | Node-RED        | Envia a distância medida pelo sensor em centímetros.                     |
+| `iot/api/alerta`      | Cliente Externo | Node-RED        | Envia um nível de alerta manual (0: sem alerta, 1: Alerta, 2: Perigo). |
+| `iot/led/verde`       | Node-RED        | ESP32 (Wokwi)   | Comando para ligar/desligar o LED verde (`1` ou `0`).                        |
+| `iot/led/amarelo`     | Node-RED        | ESP32 (Wokwi)   | Comando para ligar/desligar o LED amarelo (`1` ou `0`).                      |
+| `iot/led/vermelho`    | Node-RED        | ESP32 (Wokwi)   | Comando para ligar/desligar o LED vermelho (`1` ou `0`).                     |
+| `iot/buzzer/estado`   | Node-RED        | ESP32 (Wokwi)   | Comando para ligar/desligar o buzzer (`1` ou `0`).                           |
+| `iot/status/dados`    | Node-RED        | (Opcional)      | Publica um JSON com o estado completo do sistema para depuração.         |
 
-  * `0` = sem alerta
-  * `1` = alerta moderado
-  * `2` = alerta alto
+🧠 Lógica de Alerta (Node-RED)
+A lógica principal está no nó de função "Calcula Nível e Define Alertas":
 
-### Exibe Dados no Monitor Serial:
+Constantes:
 
-* Mostra distância, nível da água e alerta ativo
+ALTURA_SENSOR: Altura do sensor em relação ao leito do rio (ex: 300 cm).
+NIVEL_NORMAL: Nível máximo para o status "Normal" (ex: 150 cm).
+NIVEL_ALERTA: Nível máximo para o status "Alerta" (ex: 220 cm).
 
-### Personalizável:
+Cálculo:
 
-* Os valores de alerta são fáceis de mudar no código
+nivelAgua = ALTURA_SENSOR - distancia
+Regras de Status:
 
-## ⚙️ Como Funciona?
+PERIGO: nivelAgua > NIVEL_ALERTA OU alertaApi == 2. Ativa o LED vermelho e o buzzer.
+ALERTA: nivelAgua > NIVEL_NORMAL OU alertaApi == 1. Ativa o LED amarelo.
+NORMAL: Caso contrário. Ativa o LED verde.
 
-### 1. Sensor HC-SR04:
+### Constantes:
+-   `ALTURA_SENSOR`: Altura do sensor em relação ao leito do rio (ex: `300 cm`).
+-   `NIVEL_NORMAL`: Nível máximo para o status "Normal" (ex: `150 cm`).
+-   `NIVEL_ALERTA`: Nível máximo para o status "Alerta" (ex: `220 cm`).
 
-* Arduino envia pulso (TRIG)
-* Sensor emite ultrassom
-* Reflete na água e volta (ECHO)
-* Arduino mede o tempo e calcula a distância
+### Cálculo:
+-   `nivelAgua = ALTURA_SENSOR - distancia`
 
-### 2. Cálculo:
-
-* Distância \* 0.0343 / 2 = cm
-* Nível da água = altura total - distância
-
-### 3. Decisão e Alerta:
-
-* Compara nível com os limites
-* Considera o `alertaApiSimulado`
-* Aciona LEDs e buzzer conforme necessidade
-
-## 🛠️ Componentes no Wokwi
-
-* Arduino Uno
-* Sensor HC-SR04
-* LEDs (verde, amarelo, vermelho)
-* 3 resistores 220Ω
-* Buzzer
-
-## 💻 Software e Configuração
-
-### sketch.ino
-
-* O código que controla o funcionamento
-
-### diagram.json
-
-* O diagrama que conecta os componentes virtualmente
-
-## 🚀 Como Simular no Wokwi (Passo a Passo)
-
-### 1. Acesse o Wokwi
-
-* [Crie um novo projeto](https://wokwi.com/projects/new/arduino-uno)
-
-### 2. Diagrama
-
-* Apague o conteúdo de `diagram.json`
-* Cole o fornecido no projeto
-
-### 3. Código
-
-* Apague o `sketch.ino` existente
-* Cole o código do projeto
-
-### 4. Inicie a Simulação
-
-* Clique no botão ▶️ (play)
-
-### 5. Interaja
-
-* Clique no sensor HC-SR04 e use o slider
-* Diminua a distância para simular subida da água
-
-### 6. Veja os Resultados
-
-* Observe as cores dos LEDs
-* Ouça o buzzer
-* Veja o Monitor Serial
-
-### 7. Teste o Alerta Externo
-
-* Pare a simulação
-* Edite `int alertaApiSimulado = 0;`
-* Altere para 1 ou 2 e reinicie
-
-## 🔧 Quer Personalizar?
-
-Edite no `sketch.ino`:
-
-```cpp
-const float ALTURA_SENSOR_DO_LEITO_RIO_CM = 300.0;
-const float NIVEL_NORMAL_MAX_CM = 150.0;
-const float NIVEL_ALERTA_MAX_CM = 220.0;
-int alertaApiSimulado = 0;
-```
-
-* Ajuste os limites ou altura do sensor
-
-## ⚠️ Limitações
-
-* Simulação: não é um sensor real
-* Alerta externo é manual
-* Sensor virtual é idealizado
-
-## 💡 Ideias para o Futuro
-
-* Usar ESP32 com Wi-Fi para alertas reais
-* Gravar dados em SD ou nuvem
-* Enviar alertas por notificações/SMS
-* Usar energia solar
-
----
+### Regras de Status:
+-   **PERIGO**: `nivelAgua > NIVEL_ALERTA` OU `alertaApi == 2`. Ativa o LED vermelho e o buzzer.
+-   **ALERTA**: `nivelAgua > NIVEL_NORMAL` OU `alertaApi == 1`. Ativa o LED amarelo.
+-   **NORMAL**: Caso contrário. Ativa o LED verde.
