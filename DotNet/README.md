@@ -1,4 +1,4 @@
-# 🚨 SafeAlert (Oracle Database + .NET)
+# 🚨 SafeAlert (.NET + Oracle Database)
 **SafeAlert** é uma plataforma de comunicação desenvolvida para **reportar e monitorar em tempo real eventos extremos** — como desastres naturais, acidentes e situações de emergência — **ocorridos na cidade de São Paulo**. A solução tem como objetivo **auxiliar tanto os cidadãos quanto as autoridades locais** com informações ágeis, precisas e confiáveis, promovendo uma resposta mais rápida e eficaz frente a situações críticas.
 
 ## 📌 Funcionalidades Principais
