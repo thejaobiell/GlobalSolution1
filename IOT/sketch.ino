@@ -1,116 +1,142 @@
-// Pinos do sensor ultrassônico HC-SR04
-const int TRIG_PIN = 7;
-const int ECHO_PIN = 6;
+#include <WiFi.h>
+#include <PubSubClient.h>
 
-// Pinos dos LEDs
-const int LED_VERDE_PIN = 10;
-const int LED_AMARELO_PIN = 9;
-const int LED_VERMELHO_PIN = 8;
+// --- Configurações de Rede e MQTT ---
+const char* SSID = "Wokwi-GUEST";
+const char* PASSWORD = "";
+const char* MQTT_BROKER = "broker.hivemq.com";
+const int MQTT_PORT = 1883;
 
-// Pino do Buzzer
-const int BUZZER_PIN = 5;
+// --- Tópicos MQTT ---
+const char* TOPICO_PUBLICAR_DISTANCIA = "iot/sensor/distancia";
+const char* TOPICO_INSCREVER_LED_VERDE = "iot/led/verde";
+const char* TOPICO_INSCREVER_LED_AMARELO = "iot/led/amarelo";
+const char* TOPICO_INSCREVER_LED_VERMELHO = "iot/led/vermelho";
+const char* TOPICO_INSCREVER_BUZZER = "iot/buzzer/estado";
 
-// Configurações de nível de água (em cm)
-const float ALTURA_SENSOR_DO_LEITO_RIO_CM = 300.0;
-const float NIVEL_NORMAL_MAX_CM = 150.0;
-const float NIVEL_ALERTA_MAX_CM = 220.0;
+// --- Pinos do ESP32 ---
+const int PINO_TRIG = 27;
+const int PINO_ECHO = 26;
+const int PINO_LED_VERDE = 14;
+const int PINO_LED_AMARELO = 12;
+const int PINO_LED_VERMELHO = 13;
+const int PINO_BUZZER = 15;
 
-// Alerta externo simulado (0 = nenhum, 1 = moderado, 2 = alto)
-int alertaApiSimulado = 0;
+// --- Variáveis Globais ---
+WiFiClient espClient;
+PubSubClient client(espClient);
+unsigned long lastMsg = 0;
+const long interval = 5000; // Publicar a cada 5 segundos
 
-long duracaoOnda;
-float distanciaCmMedida;
-float nivelAguaAtualCm;
+// --- Protótipos de Funções ---
+void setup_wifi();
+void reconnect();
+void callback(char* topic, byte* payload, unsigned int length);
+float lerDistanciaCm();
 
 void setup() {
   Serial.begin(115200);
 
-  pinMode(TRIG_PIN, OUTPUT);
-  pinMode(ECHO_PIN, INPUT);
+  // Configuração dos pinos
+  pinMode(PINO_TRIG, OUTPUT);
+  pinMode(PINO_ECHO, INPUT);
+  pinMode(PINO_LED_VERDE, OUTPUT);
+  pinMode(PINO_LED_AMARELO, OUTPUT);
+  pinMode(PINO_LED_VERMELHO, OUTPUT);
+  pinMode(PINO_BUZZER, OUTPUT);
 
-  pinMode(LED_VERDE_PIN, OUTPUT);
-  pinMode(LED_AMARELO_PIN, OUTPUT);
-  pinMode(LED_VERMELHO_PIN, OUTPUT);
-
-  pinMode(BUZZER_PIN, OUTPUT);
-
-  Serial.println("Monitor de Nivel de Rio Inicializado");
+  // Iniciar conexões
+  setup_wifi();
+  client.setServer(MQTT_BROKER, MQTT_PORT);
+  client.setCallback(callback);
 }
 
 void loop() {
-  // Dispara pulso ultrassônico
-  digitalWrite(TRIG_PIN, LOW);
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+
+  unsigned long now = millis();
+  if (now - lastMsg > interval) {
+    lastMsg = now;
+
+    // Ler o sensor e publicar a distância
+    float distancia = lerDistanciaCm();
+    Serial.print("Distância medida: ");
+    Serial.print(distancia);
+    Serial.println(" cm");
+
+    char msg[10];
+    dtostrf(distancia, 4, 2, msg);
+    client.publish(TOPICO_PUBLICAR_DISTANCIA, msg);
+  }
+}
+
+// --- Funções Auxiliares ---
+
+void setup_wifi() {
+  delay(10);
+  Serial.println();
+  Serial.print("Conectando a ");
+  Serial.println(SSID);
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi conectado!");
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  String message;
+  for (int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+  int estado = message.toInt();
+
+  Serial.print("Mensagem recebida no tópico: ");
+  Serial.println(topic);
+  Serial.print("Payload: ");
+  Serial.println(message);
+
+  if (String(topic) == TOPICO_INSCREVER_LED_VERDE) {
+    digitalWrite(PINO_LED_VERDE, estado == 1 ? HIGH : LOW);
+  } else if (String(topic) == TOPICO_INSCREVER_LED_AMARELO) {
+    digitalWrite(PINO_LED_AMARELO, estado == 1 ? HIGH : LOW);
+  } else if (String(topic) == TOPICO_INSCREVER_LED_VERMELHO) {
+    digitalWrite(PINO_LED_VERMELHO, estado == 1 ? HIGH : LOW);
+  } else if (String(topic) == TOPICO_INSCREVER_BUZZER) {
+    digitalWrite(PINO_BUZZER, estado == 1 ? HIGH : LOW);
+  }
+}
+
+void reconnect() {
+  while (!client.connected()) {
+    Serial.print("Tentando conexão MQTT...");
+    if (client.connect("Wokwi-Client-ESP32")) {
+      Serial.println("Conectado!");
+      // Inscreve-se nos tópicos de controle
+      client.subscribe(TOPICO_INSCREVER_LED_VERDE);
+      client.subscribe(TOPICO_INSCREVER_LED_AMARELO);
+      client.subscribe(TOPICO_INSCREVER_LED_VERMELHO);
+      client.subscribe(TOPICO_INSCREVER_BUZZER);
+    } else {
+      Serial.print("Falhou, rc=");
+      Serial.print(client.state());
+      Serial.println(" Tentando novamente em 5 segundos");
+      delay(5000);
+    }
+  }
+}
+
+float lerDistanciaCm() {
+  digitalWrite(PINO_TRIG, LOW);
   delayMicroseconds(2);
-  digitalWrite(TRIG_PIN, HIGH);
+  digitalWrite(PINO_TRIG, HIGH);
   delayMicroseconds(10);
-  digitalWrite(TRIG_PIN, LOW);
-
-  duracaoOnda = pulseIn(ECHO_PIN, HIGH);
-  distanciaCmMedida = duracaoOnda * 0.0343 / 2.0;
-  nivelAguaAtualCm = ALTURA_SENSOR_DO_LEITO_RIO_CM - distanciaCmMedida;
-
-  // Validação da leitura
-  if (distanciaCmMedida <= 0 || distanciaCmMedida > ALTURA_SENSOR_DO_LEITO_RIO_CM) {
-    if (distanciaCmMedida <= 0 && duracaoOnda > 0) {
-      nivelAguaAtualCm = ALTURA_SENSOR_DO_LEITO_RIO_CM;
-    } else if (nivelAguaAtualCm < 0) {
-      nivelAguaAtualCm = 0;
-    }
-  }
-
-  Serial.print("Distancia: ");
-  Serial.print(distanciaCmMedida);
-  Serial.print(" cm | Nivel: ");
-  Serial.print(nivelAguaAtualCm);
-  Serial.print(" cm | Alerta API: ");
-  Serial.println(alertaApiSimulado);
-
-  bool estadoLedVermelho = false;
-  bool estadoLedAmarelo = false;
-  bool estadoLedVerde = false;
-  String mensagemEstado = "";
-
-  // Estado baseado no nível da água
-  if (nivelAguaAtualCm > NIVEL_ALERTA_MAX_CM) {
-    estadoLedVermelho = true;
-    mensagemEstado = "PERIGO DE INUNDACAO (Nivel ALTO)";
-  } else if (nivelAguaAtualCm > NIVEL_NORMAL_MAX_CM) {
-    estadoLedAmarelo = true;
-    mensagemEstado = "ALERTA (Nivel MODERADO)";
-  } else {
-    estadoLedVerde = true;
-    mensagemEstado = "NORMAL (Nivel BAIXO)";
-  }
-
-  // Estado influenciado pelo alerta externo
-  if (alertaApiSimulado == 2) {
-    estadoLedVermelho = true;
-    estadoLedAmarelo = false;
-    estadoLedVerde = false;
-    if (!mensagemEstado.startsWith("PERIGO DE INUNDACAO (Nivel ALTO)")) {
-      mensagemEstado = "PERIGO DE INUNDACAO (Alerta Externo MAXIMO)";
-    }
-  } else if (alertaApiSimulado == 1) {
-    if (estadoLedVerde) {
-      estadoLedAmarelo = true;
-      estadoLedVerde = false;
-      mensagemEstado = "ALERTA (Alerta Externo MODERADO)";
-    }
-  }
-
-  digitalWrite(LED_VERDE_PIN, estadoLedVerde ? HIGH : LOW);
-  digitalWrite(LED_AMARELO_PIN, estadoLedAmarelo ? HIGH : LOW);
-  digitalWrite(LED_VERMELHO_PIN, estadoLedVermelho ? HIGH : LOW);
-
-  Serial.print("Estado: ");
-  Serial.println(mensagemEstado);
-
-  if (estadoLedVermelho) {
-    tone(BUZZER_PIN, 1000);
-  } else {
-    noTone(BUZZER_PIN);
-  }
-
-  Serial.println("------------------------------------------------------");
-  delay(1000);
+  digitalWrite(PINO_TRIG, LOW);
+  
+  long duracao = pulseIn(PINO_ECHO, HIGH);
+  return (duracao * 0.0343) / 2.0;
 }
