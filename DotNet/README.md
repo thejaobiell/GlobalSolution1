@@ -1,4 +1,4 @@
-# 🚨 SafeAlert
+# 🚨 SafeAlert (Oracle Database + .NET)
 **SafeAlert** é uma plataforma de comunicação desenvolvida para **reportar e monitorar em tempo real eventos extremos** — como desastres naturais, acidentes e situações de emergência — **ocorridos na cidade de São Paulo**. A solução tem como objetivo **auxiliar tanto os cidadãos quanto as autoridades locais** com informações ágeis, precisas e confiáveis, promovendo uma resposta mais rápida e eficaz frente a situações críticas.
 
 ## 📌 Funcionalidades Principais
@@ -11,13 +11,13 @@
 
 ---
 
-## 📦 Instalação
+## 📦 Como rodar a API
 
 1. Clone o repositório:
 
 ```bash
-git clone  https://github.com/leomotalima/SafeAlertRepo.git
-cd SafeAlertRepo/SafeAlertDotNet
+git clone https://github.com/leomotalima/SafeAlertRepo.git
+cd SafeAlertRepo/SafeAlertDotnet/  
 ```
 
 2. Restaure os pacotes:
@@ -30,7 +30,7 @@ dotnet restore
 
 ```json
 "ConnectionStrings": {
-  "OracleDb": "User Id=usuario;Password=senha;Data Source=oracle.fiap.com.br:1521/orcl"
+  "OracleDb": "User Id=<seu_usuario>;Password=<sua_senha>;Data Source=oracle.fiap.com.br:1521/orcl"
 }
 ```
 
@@ -100,16 +100,6 @@ http://localhost:5241/swagger
 - Entity Framework Core
 - Oracle Database
 - Swagger (OpenAPI)
-- Java Web (frontend)
-
----
-
-## 🎓 Disciplinas Envolvidas
-
-| Disciplina        | Aplicação                                                                 |
-|-------------------|---------------------------------------------------------------------------|
-| Java Advanced     | Interface web integrada à API REST                                        |
-| Banco de Dados    | Persistência com Oracle                                                   |
 
 ---
 
@@ -125,7 +115,7 @@ http://localhost:5241/swagger
 ## 🎥 Demonstrações em Vídeo
 
 - ✅ **Demonstração da Solução Completa:**  
-  https://youtu.be/SbV9s94TQM8
+  https://youtu.be/3UMKNceYIJk
 
 - 🎤 **Pitch do Projeto:**  
   https://www.youtube.com/watch?v=YEXlSVQTqaA
