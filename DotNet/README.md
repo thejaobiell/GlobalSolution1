@@ -13,7 +13,7 @@
 
 ## 📦 Como rodar a API
 
-1. Clone o repositório:
+1. [Clone o repositório:](https://github.com/leomotalima/SafeAlertRepo)
 
 ```bash
 git clone https://github.com/leomotalima/SafeAlertRepo.git
